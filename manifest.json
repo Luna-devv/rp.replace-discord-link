@@ -1,0 +1,11 @@
+{
+    "name": "Replace Discord Links",
+    "version": "1.0.0",
+    "description": "Replace the subdomain of discord links to a custom one or none",
+    "author": "ルナ#8888",
+    "license": "MIT",
+    "nsfw": false,
+    "discord": "yYd6YKHQZH",
+    "repository": "https://github.com/Luna-devv/rp.replace-discord-link",
+    "permissions": "sendMessage"
+}
