@@ -12,13 +12,15 @@ module.exports = class PluginName extends Plugin {
             render: Settings
         });
 
-        inject('replacer', messages, 'sendMessage', (args) => {
-            if (this.settings.get('subdomain')) {
-                args[1].content = args[1].content.replace('https://discord', `https://${this.settings.get('subdomain')}.discord`);
-                args[1].content = args[1].content.replace('https://ptb.discord', `https://${this.settings.get('subdomain')}.discord`);
-                args[1].content = args[1].content.replace('https://canary.discord', `https://${this.settings.get('subdomain')}.discord`);
-            };
-            if (this.settings.get('http')) args[1].content = args[1].content.replace(`https://${this.settings.get('subdomain') || 'canary'}`, `http://${this.settings.get('subdomain')}`)
+        inject('rdl-replacer', messages, 'sendMessage', (args) => {
+
+            let text = [];
+            args[1].content.split(' ')
+                ?.forEach(string => {
+                    if (string.match(/(https?:\/\/)(discord|ptb\.discord|canary\.discord)\.com/gi)) string = string.replace(string.split('.com')[0], `http${this.settings.get('http') ? '' : 's'}://${this.settings.get('subdomain') ? `${this.settings.get('subdomain')}.` : ''}discord`);
+                    text.push(string);
+                });
+            args[1].content = text.join(' ');
 
             return args;
         }, true);
@@ -26,6 +28,6 @@ module.exports = class PluginName extends Plugin {
 
     pluginWillUnload() {
         powercord.api.settings.unregisterSettings(this.entityID);
-        uninject('replacer');
+        uninject('rdl-replacer');
     }
 }
